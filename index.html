@@ -1,42 +1,333 @@
-<!-- Created by metoushela walker-->
-
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
-    <title>Game Balls Version 2.0 Powered By Metoushela walker</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.js"></script>
-    <script src="https://code.createjs.com/1.0.0/soundjs.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
+    <!-- Meta tags inchangés -->
+       <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+
+    
+    <link rel="stylesheet" href="style.css">
+
+    <title>Davbot chatgpt</title>
+     <style>
+         
+        @import url("https://unicons.iconscout.com/release/v4.0.0/css/line.css");
+        @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        main {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+            overflow: hidden;
+        }
+
+        .topper {
+            width: 100%;
+            background: linear-gradient(150deg,#c62828 );
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .topper .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #147 url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaAlXAmdUfKKH-7QZ2yihil_GReFnwJmtB-w&usqp=CAU);
+            background-size: cover;
+            margin-left: 1px;
+        }
+
+        .topper .name {
+            
+            font-weight: bolder;
+            margin-left: 15px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            
+
+ 
+      background-color: #c;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+    
+    
+            .bottom {
+            width: 100%;
+            background: #595656;
+            position: fixed;
+            bottom: 0;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+     
+        #input {
+            width: 95%;
+            background: grey;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+
+        #input input {
+            width: 90%;
+            padding: 7px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        #input input::placeholder {
+            color: #e6e6e6;
+        }
+
+        #input button {
+            font-size: 20px;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .msgs_cont {
+            width: 100%;
+            height: calc(100vh - 155px);
+            overflow: auto;
+          
+               padding: 12px 16px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+            
+            scroll-behavior: smooth;
+        }
+
+        .msgs_cont ul {
+            width: 100%;
+            padding: 15px;
+            list-style-type: none;
+        }
+
+        
+
+    .schat {
+        float: right;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        margin: 10px 0;
+        padding: 12px 16px;
+        border-radius: 15px 15px 0 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        max-width: 70%;
+        clear: both;
+    }
+
+    .rchat {
+        float: left;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: #fff;
+        margin: 10px 0;
+        padding: 12px 16px;
+        border-radius: 15px 15px 15px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        max-width: 70%;
+        clear: both;
+    }
+
+    /* Animation pour les nouveaux messages */
+    .schat, .rchat {
+        animation: messageAppear 0.3s ease-out;
+        transform-origin: bottom;
+    }
+
+    @keyframes messageAppear {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Effet au survol pour les messages */
+    .schat:hover, .rchat:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+    }
+
+          
+
+    h2 {
+      background-color: #c62828;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+    
+          
+          h1 {
+color: #F0F9;
+  font-size: 30px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 30px;
+  color: #0f0;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+
+}
+li {
+    padding: 1px;
+  border: 5px solid #c62828 ;
+  margin: 5px;
+}
+}
+     </style>
 </head>
-
 <body>
-    <div id="container">
-        <canvas id="canvas"></canvas>
-        <span id="checkbowaudio"><i class="fas fa-volume-up"></i></span>
-        <div id="rules">Rules<br><br>
-            <span class="inforules">Select at least three balls of<br> the same color<br> that are touching</span><br>
-            <span class="inforules">Big Bonus: 8 Balls minimun</span>
-            <span class="inforules">⭐️: Surprise time bonus</span><br><br><br>
-            <span>Tap to Start, this is created by swarup </span>
+    <main>
+        <!-- Structure HTML inchangée -->
+                <div class="topper">
+            <div class="icon"></div>
+            <div class="name">BG bot 🤖</div>
         </div>
-        <div id="timegame"></div>
-        <div id="play_pause"><i class="fas fa-pause"></i></div>
-        <div id="info">0</div>
-        <span id="Fps"><i>fps</i><span id="nbrfps"></span></span>
-        <div id="endgame">☹️ Game Over <br><br>
-            <span id="bestscore"></span>
-            <span id="score"></span><br><br><br>
-            <span>Tap to Restart</span>
-        </div>  
-     </div>
+ 
+        <div class="msgs_cont">
+            <ul id="list_cont"></ul>
+        </div>
+        <br>
+        <br>
+        <br>
 
+        <div class="bottom">
+            <div id="input">
+                <input type="text" id="txt" placeholder="ecris ta question">
+                <button id="sendBtn" class="uil uil-message"></button>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js">
+            </script>
+            <script>
+                
+document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+const API_KEY = "AIzaSyCPxZ5M3GQ5Z9VcgOkRTcbwgpi7VtONOIc";
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+const predefinedResponses = {
+    "qui es-tu ?": "Je suis l'intelligence artificielle créée par Davbot App 🦅.",
+    "créateur": "Mon créateur est David mpongo 🦅.",
+    "qui t'a créé": "J'ai été développée par David mpongo, un passionné d'intelligence artificielle.",
+    "que fais-tu": "Je suis ici pour répondre à vos questions et vous aider dans vos tâches quotidiennes !",
+    "Qui t'a créé": "David mpongo ✍️ est mon créateur ",
+    "David ":"oui que puis-je faire pour vous ?",
+     "Davbot":"oui que puis-je faire pour vous ?"
+};
+
+async function sendMessage() {
+    const userMessage = document.getElementById("txt").value.trim();
+    if (!userMessage) return;
+
+    const chatBox = document.getElementById("list_cont");
+    
+    
+    const userElement = document.createElement("li");
+    userElement.classList.add("schat");
+    userElement.textContent = userMessage;
+    chatBox.appendChild(userElement);
+
+    document.getElementById("txt").value = '';
+    
+    
+    const cleanMsg = userMessage.toLowerCase();
+    let response = predefinedResponses[cleanMsg];
+
+    if (!response) {
+        try {
+            response = await fetchGeminiData(userMessage);
+        } catch (error) {
+            response = "Désolé, une erreur s'est produite. Veuillez réessayer.";
+        }
+    }
+
+    const botElement = document.createElement("li");
+    botElement.classList.add("rchat");
+    botElement.textContent = response;
+    chatBox.appendChild(botElement);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+async function fetchGeminiData(prompt) {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        })
+    });
+
+    if (!response.ok) throw new Error('API error');
+    const data = await response.json();
+    
+    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+        throw new Error('Réponse API invalide');
+    }
+    
+    return data.candidates[0].content.parts[0].text;
+    }
+    
+            </script>
 </body>
- n 6
 </html>
