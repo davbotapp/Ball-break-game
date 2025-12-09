@@ -1,333 +1,347 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- Meta tags inchangés -->
-       <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    
-
-    
-    <link rel="stylesheet" href="style.css">
-
-    <title>Davbot chatgpt</title>
-     <style>
-         
-        @import url("https://unicons.iconscout.com/release/v4.0.0/css/line.css");
-        @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap");
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Nunito", sans-serif;
-        }
-
-        body {
-            overflow: hidden;
-        }
-
-        main {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
-            overflow: hidden;
-        }
-
-        .topper {
-            width: 100%;
-            background: linear-gradient(150deg,#c62828 );
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: start;
-        }
-
-        .topper .icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #147 url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaAlXAmdUfKKH-7QZ2yihil_GReFnwJmtB-w&usqp=CAU);
-            background-size: cover;
-            margin-left: 1px;
-        }
-
-        .topper .name {
-            
-            font-weight: bolder;
-            margin-left: 15px;
-            font-size: 18px;
-            letter-spacing: 2px;
-            
-
- 
-      background-color: #c;
-      padding: 10px;
-      text-align: center;
-      font-size: 1.4em;
-      font-weight: bold;
-    }
-    
-    
-            .bottom {
-            width: 100%;
-            background: #595656;
-            position: fixed;
-            bottom: 0;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-     
-        #input {
-            width: 95%;
-            background: grey;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            padding: 5px;
-        }
-
-        #input input {
-            width: 90%;
-            padding: 7px;
-            border: none;
-            outline: none;
-            background: transparent;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        #input input::placeholder {
-            color: #e6e6e6;
-        }
-
-        #input button {
-            font-size: 20px;
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-        }
-
-        .msgs_cont {
-            width: 100%;
-            height: calc(100vh - 155px);
-            overflow: auto;
-          
-               padding: 12px 16px;
-    border-radius: 20px;
-    margin-bottom: 12px;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Freeboxvpn</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #001022, #001d3d);
+    color: #eee;
     display: flex;
     flex-direction: column;
-    position: relative;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-            
-            scroll-behavior: smooth;
-        }
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
 
-        .msgs_cont ul {
-            width: 100%;
-            padding: 15px;
-            list-style-type: none;
-        }
+  header {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    letter-spacing: 0.2em;
+    color: #00cfff;
+    display: flex;
+    justify-content: center;
+  }
 
-        
+  .letter {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: appear 0.5s forwards;
+  }
 
-    .schat {
-        float: right;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #fff;
-        margin: 10px 0;
-        padding: 12px 16px;
-        border-radius: 15px 15px 0 15px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        max-width: 70%;
-        clear: both;
+  @keyframes appear {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
+  }
 
-    .rchat {
-        float: left;
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        color: #fff;
-        margin: 10px 0;
-        padding: 12px 16px;
-        border-radius: 15px 15px 15px 0;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        max-width: 70%;
-        clear: both;
-    }
+  main {
+    background: rgba(0,0,0,0.5);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00cfff80;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+  main h2 {
+    margin-bottom: 20px;
+    color: #00cfff;
+  }
 
-    /* Animation pour les nouveaux messages */
-    .schat, .rchat {
-        animation: messageAppear 0.3s ease-out;
-        transform-origin: bottom;
-    }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.4;
+  }
 
-    @keyframes messageAppear {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+  button {
+    background: linear-gradient(45deg, #00cfff, #005f7f);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 0 10px #00cfff;
+  }
 
-    /* Effet au survol pour les messages */
-    .schat:hover, .rchat:hover {
-        transform: scale(1.02);
-        transition: transform 0.2s ease;
-    }
+  button:hover {
+    box-shadow: 0 0 25px #00e6ff;
+    transform: scale(1.05);
+  }
 
-          
+  button:disabled {
+    cursor: default;
+    background: #004358;
+    box-shadow: none;
+  }
 
-    h2 {
-      background-color: #c62828;
-      padding: 10px;
-      text-align: center;
-      font-size: 1.4em;
-      font-weight: bold;
-    }
-    
-          
-          h1 {
-color: #F0F9;
-  font-size: 30px;
-  text-align: center;
-  text-transform: uppercase;
-}
+  #message {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    color: #0f0;
+  }
 
-h2 {
-  font-size: 30px;
-  color: #0f0;
-}
+  #downloadBtn {
+    margin-top: 20px;
+    background: #005f7f;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 20px;
+    display: none;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 0 15px #00cfff;
+    cursor: pointer;
+  }
 
-p {
-  margin-bottom: 20px;
-}
+  #downloadBtn:hover {
+    background: #0088cc;
+    box-shadow: 0 0 30px #00e6ff;
+  }
 
-ul {
-  list-style-type: none;
-}
+  .loader {
+    border: 4px solid #00cfff33;
+    border-top: 4px solid #00cfff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+  }
 
+  @keyframes spin {100% { transform: rotate(360deg); }
+  }
 
-}
-li {
-    padding: 1px;
-  border: 5px solid #c62828 ;
-  margin: 5px;
-}
-}
-     </style>
+  /* Form step containers */
+  #durationStep, #nameStep {
+    margin-top: 20px;
+    display: none;
+  }
+
+  label {
+    margin-right: 15px;
+    cursor: pointer;
+  }
+
+  input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 15px;
+  }
+
+  /* Contact form */
+  #contactForm {
+    margin-top: 25px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+    text-align: left;
+  }
+
+  #contactForm h3 {
+    color: #00cfff;
+    margin-bottom: 15px;
+  }
+
+  #contactForm input[disabled] {
+    background-color: #333;
+    color: #aaa;
+  }
+
+  #contactForm input {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+
+  #sendWA {
+    background: #25d366;
+    color: white !important;
+    padding: 12px 25px;
+    border-radius: 30px;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 0 15px #25d366;
+  }
+
+  #sendWA:hover {
+    background: #1ebe57;
+    box-shadow: 0 0 30px #1ebe57;
+  }
+</style>
+
 </head>
 <body>
-    <main>
-        <!-- Structure HTML inchangée -->
-                <div class="topper">
-            <div class="icon"></div>
-            <div class="name">BG bot 🤖</div>
-        </div>
+
+<header id="title"></header>
+
+<main>
+    <h2>Achetez votre fichier VPN</h2>
+  <p>Pour un accès rapide et sécurisé, achetez dès maintenant votre fichier VPN personnalisé.</p>
+  <button id="buyBtn">Acheter</button>
+
+  <div id="durationStep">
+    <p>Choisissez la durée de votre fichier VPN :</p>
+    <label><input type="radio" name="duration" value="30" /> 30 jours</label>
+    <label><input type="radio" name="duration" value="15" /> 15 jours</label>
+    <label><input type="radio" name="duration" value="7" /> 7 jours</label>
+    <br />
+    <button id="nextToNameBtn" disabled>Suivant</button>
+  </div>
+
+  <div id="nameStep">
+    <p>Entrez le nom que vous souhaitez pour votre VPN :</p>
+    <input type="text" id="vpnName" placeholder="Nom du VPN" />
+    <br />
+    <button id="generateBtn" disabled>Générer le fichier</button>
+  </div>
+
+  <div id="message"></div>
+  <a id="downloadBtn" href="#">Download file now</a>
+
+  <div id="contactForm">
+    <h3>Contactez l’administrateur</h3>
+    <label>Nom du client :</label><br />
+    <input type="text" id="clientName" placeholder="Votre nom" />
+    <label>Nom du VPN :</label><br />
+    <input type="text" id="summaryVpn" disabled />
+    <label>Durée :</label><br />
+    <input type="text" id="summaryDuration" disabled />
+    <br />
+    <a id="sendWA" target="_blank" href="#">Envoyer via WhatsApp</a>
+    
+    
+    
+    
+    
+    
+   
+
+
  
-        <div class="msgs_cont">
-            <ul id="list_cont"></ul>
-        </div>
-        <br>
-        <br>
-        <br>
+ 
+ 
+ 
+  </div>
+</main>
 
-        <div class="bottom">
-            <div id="input">
-                <input type="text" id="txt" placeholder="ecris ta question">
-                <button id="sendBtn" class="uil uil-message"></button>
-            </div>
-        </div>
-    </main>
+<script>
+  // Animation titre lettre par lettre
+  
+  const titleText = "Freeboxvpn";
+  const titleEl = document.getElementById('title');
+  for (let i = 0; i < titleText.length; i++) {
+    const span = document.createElement('span');
+    span.textContent = titleText[i];
+    span.classList.add('letter');
+    span.style.animationDelay = (i * 0.15) + 's';
+    titleEl.appendChild(span);
+  }
 
-    <script src="script.js">
-            </script>
-            <script>
-                
-document.getElementById("sendBtn").addEventListener("click", sendMessage);
+  const buyBtn = document.getElementById('buyBtn');
+  const durationStep = document.getElementById('durationStep');
+  const nextToNameBtn = document.getElementById('nextToNameBtn');
+  const nameStep = document.getElementById('nameStep');
+  const generateBtn = document.getElementById('generateBtn');
+  const vpnNameInput = document.getElementById('vpnName');
+  const message = document.getElementById('message');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const contactForm = document.getElementById('contactForm');
+  const clientName = document.getElementById('clientName');
+  const summaryVpn = document.getElementById('summaryVpn');
+  const summaryDuration = document.getElementById('summaryDuration');
+  const sendWA = document.getElementById('sendWA');
 
-const API_KEY = "AIzaSyCPxZ5M3GQ5Z9VcgOkRTcbwgpi7VtONOIc";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+  let selectedDuration = "";
+  let vpnName = "";
 
-const predefinedResponses = {
-    "qui es-tu ?": "Je suis l'intelligence artificielle créée par Davbot App 🦅.",
-    "créateur": "Mon créateur est David mpongo 🦅.",
-    "qui t'a créé": "J'ai été développée par David mpongo, un passionné d'intelligence artificielle.",
-    "que fais-tu": "Je suis ici pour répondre à vos questions et vous aider dans vos tâches quotidiennes !",
-    "Qui t'a créé": "David mpongo ✍️ est mon créateur ",
-    "David ":"oui que puis-je faire pour vous ?",
-     "Davbot":"oui que puis-je faire pour vous ?"
-};
+  buyBtn.onclick = () => {
+    buyBtn.style.display = 'none';
+    durationStep.style.display = 'block';
+  };
 
-async function sendMessage() {
-    const userMessage = document.getElementById("txt").value.trim();
-    if (!userMessage) return;
+  durationStep.onchange = (e) => {
+    if (e.target.name === "duration") {
+      selectedDuration = e.target.value;
+      nextToNameBtn.disabled = false;
+    }
+  };
 
-    const chatBox = document.getElementById("list_cont");
-    
-    
-    const userElement = document.createElement("li");
-    userElement.classList.add("schat");
-    userElement.textContent = userMessage;
-    chatBox.appendChild(userElement);
+  nextToNameBtn.onclick = () => {
+    durationStep.style.display = 'none';
+    nameStep.style.display = 'block';
+  };
 
-    document.getElementById("txt").value = '';
-    
-    
-    const cleanMsg = userMessage.toLowerCase();
-    let response = predefinedResponses[cleanMsg];
+  vpnNameInput.addEventListener('input', () => {
+    generateBtn.disabled = vpnNameInput.value.trim().length === 0;
+  });
 
-    if (!response) {
-        try {
-            response = await fetchGeminiData(userMessage);
-        } catch (error) {
-            response = "Désolé, une erreur s'est produite. Veuillez réessayer.";
-        }
+  generateBtn.onclick = () => {
+    vpnName = vpnNameInput.value.trim();
+    if (!selectedDuration || !vpnName) return;
+
+    generateBtn.disabled = true;
+    vpnNameInput.disabled = true;
+    message.innerHTML = '<div class="loader"></div><p>Génération de votre fichier VPN...</p>';
+    downloadBtn.style.display = 'none';
+
+    setTimeout(() => {
+      message.textContent = `Votre fichier VPN "${vpnName}" pour${selectedDuration} jours a été généré avec succès.`;
+      downloadBtn.style.display = 'inline-block';
+      downloadBtn.download = `vpnName-{selectedDuration}j.ovpn`;
+      const fakeFileContent = `# Fichier VPN pour vpnName - validité :{selectedDuration} jours\nclient\ndev tun\nproto udp\nremote vpn.example.com 1194\n...`;
+      downloadBtn.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(fakeFileContent);
+      nameStep.style.display = 'none';
+    }, 3000);
+  };
+
+  downloadBtn.onclick = (e) => {
+    e.preventDefault();
+    if (!vpnName || !selectedDuration) return;
+    if (confirm("Contactez l'administrateur pour payer et réserver votre fichier.\nCliquez sur D'accord pour continuer.")) {
+      contactForm.style.display = 'block';
+      summaryVpn.value = vpnName;
+      summaryDuration.value = selectedDuration + " jours";
+      contactForm.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  sendWA.onclick = () => {
+    const name = clientName.value.trim();
+    if (!name) {
+      alert("Veuillez entrer votre nom.");
+      return;
     }
 
-    const botElement = document.createElement("li");
-    botElement.classList.add("rchat");
-    botElement.textContent = response;
-    chatBox.appendChild(botElement);
+    const message = `Bonjour, je suis name. Je souhaite acheter un fichier VPN. du VPN :{vpnName}\nDurée : selectedDuration jours`;
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-async function fetchGeminiData(prompt) {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{
-                    text: prompt
-                }]
-            }]
-        })
-    });
+    const phone = "243817111610";
+    const url = `https://wa.me/{phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };   
+</script>
 
-    if (!response.ok) throw new Error('API error');
-    const data = await response.json();
-    
-    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
-        throw new Error('Réponse API invalide');
-    }
-    
-    return data.candidates[0].content.parts[0].text;
-    }
-    
-            </script>
 </body>
 </html>
+
+
+
