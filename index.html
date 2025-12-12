@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+<head>
   
   <meta name="google-site-verification" content="YvfIvLYwUp-8q6YSySsEBCG2iuqVcRpz8kEAY4XLDfM" />
-<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Davbot VPN — Achat</title>
@@ -148,8 +148,8 @@ const ORANGE_NUMBER = "+243846064543";
 const AIRTEL_NUMBER = "+243982697752";
 const PRICES = { "3": "1.50 USD", "7": "3.00 USD", "30": "10.00 USD" };
 
-const DEFAULT_SERVER = null; // Aucun serveur sélectionné par défaut
-const DEFAULT_DURATION = null; // Durée non déterminée
+const DEFAULT_SERVER = null;
+const DEFAULT_DURATION = null;
 
 const startBtn = document.getElementById('startBtn');
 const serverStep = document.getElementById('serverStep');
@@ -299,7 +299,7 @@ generateBtn.onclick = () => {
     afterGen.classList.remove('hidden');
     paymentStep.classList.remove('hidden');
     summary.classList.remove('hidden');
-    downloadBtn.style.display = 'none';
+    downloadBtn.style.display = 'none'; // Pas de téléchargement automatique
   } else {
     const blob = new Blob([generatedFile.content], {type:"text/plain"});
     downloadBtn.href = URL.createObjectURL(blob);
@@ -308,7 +308,7 @@ generateBtn.onclick = () => {
     afterGen.classList.remove('hidden');
     paymentStep.classList.add('hidden');
     summary.classList.add('hidden');
-    downloadBtn.click(); // téléchargement immédiat
+    downloadBtn.click();
   }
 
   document.getElementById('summaryText').textContent =
@@ -357,9 +357,9 @@ function checkCustomForm(){
   );
 }
 customVpnName.addEventListener('input', checkCustomForm);
-customPort.add
 customPort.addEventListener('input', checkCustomForm);
-customConfig.addEventListener('input', checkCustomForm);
+customConfig.addEventListener
+customConfig.addEventListener('input', checkCustomForm); // ✅ corrigé
 
 generateCustomBtn.onclick = () => {
   const name = customVpnName.value.trim() || 'MonVPN';
@@ -390,14 +390,14 @@ generateCustomBtn.onclick = () => {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = name + getExt(type);
+  a.download = name + ext; // nom + extension
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  alert('Fichier personnalisé généré et téléchargé !');
+  alert(`Fichier ${name}${ext} généré et téléchargé !`);
 };
 </script>
 </body>
-  </html>
+    </html>
