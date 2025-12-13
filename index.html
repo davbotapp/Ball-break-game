@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  
-  <meta name="google-site-verification" content="YvfIvLYwUp-8q6YSySsEBCG2iuqVcRpz8kEAY4XLDfM" />
+    <meta name="google-site-verification" content="YvfIvLYwUp-8q6YSySsEBCG2iuqVcRpz8kEAY4XLDfM" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Davbot VPN — Achat</title>
@@ -62,7 +61,9 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
     <option value="http">HTTP Custom (.hc)</option>
   </select>
   <input id="customPort" type="number" placeholder="Port ex : 1194" />
-  <textarea id="customConfig" placeholder="Configuration / Protocol ex : UDP" rows="4"></textarea>
+  <select id="customConfig">
+    <option value="">Choisissez la configuration / protocole</option>
+  </select>
   <button id="generateCustomBtn" disabled>Générer le fichier</button>
 </div>
 
@@ -146,7 +147,7 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
 const ADMIN_WA = "243846064543"; 
 const ORANGE_NUMBER = "+243846064543";
 const AIRTEL_NUMBER = "+243982697752";
-const PRICES = { "3": "1.50 USD", "7": "3.00 USD", "30": "10.00 USD" };
+const PRICES = { "3": "0.2 USD","7": "2.00 USD", "30": "5.00 USD" };
 
 const DEFAULT_SERVER = null;
 const DEFAULT_DURATION = null;
@@ -171,6 +172,13 @@ const customFileType = document.getElementById('customFileType');
 const customPort = document.getElementById('customPort');
 const customConfig = document.getElementById('customConfig');
 const generateCustomBtn = document.getElementById('generateCustomBtn');
+
+const CONFIG_OPTIONS = {
+  hat: ['NSI', 'OpenVPN', 'UDP'],
+  socks: ['UDP', 'TCP', 'Request'],
+  ink: ['UDP', 'TCP'],
+  http: ['HTTP', 'HTTPS', 'V2Ray']
+};
 
 let selectedServer = null;
 let selectedType = null;
@@ -346,6 +354,7 @@ Merci de valider et d'envoyer le fichier.`.trim();
 };
 
 document.getElementById('orangeNum').textContent = ORANGE_NUMBER;
+document.getElementById('airtelNum').text
 document.getElementById('airtelNum').textContent = AIRTEL_NUMBER;
 
 /* Custom form logic */
@@ -356,11 +365,27 @@ function checkCustomForm(){
     customConfig.value.trim()
   );
 }
+
+/* Mettre à jour la configuration disponible selon le type choisi */
+customFileType.addEventListener('change', () => {
+  const type = customFileType.value;
+  customConfig.innerHTML = '<option value="">Choisissez la configuration / protocole</option>';
+  if (CONFIG_OPTIONS[type]) {
+    CONFIG_OPTIONS[type].forEach(cfg => {
+      const option = document.createElement('option');
+      option.value = cfg;
+      option.textContent = cfg;
+      customConfig.appendChild(option);
+    });
+  }
+  checkCustomForm();
+});
+
 customVpnName.addEventListener('input', checkCustomForm);
 customPort.addEventListener('input', checkCustomForm);
-customConfig.addEventListener
-customConfig.addEventListener('input', checkCustomForm); // ✅ corrigé
+customConfig.addEventListener('change', checkCustomForm);
 
+/* Génération du fichier VPN personnalisé */
 generateCustomBtn.onclick = () => {
   const name = customVpnName.value.trim() || 'MonVPN';
   const type = customFileType.value || 'hat';
@@ -370,7 +395,7 @@ generateCustomBtn.onclick = () => {
 # Nom : ${name}
 # Type : ${type.toUpperCase()}
 # Port : ${customPort.value || "Non déterminé"}
-# Configuration : ${customConfig.value || "Non déterminé"}
+# Configuration choisie : ${customConfig.value || "Non déterminé"}
 `;
 
   // Paramètres spécifiques selon le type
