@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Davbot NSI Host Generator PRO</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Segoe UI,Tahoma,sans-serif;
+ background:linear-gradient(135deg,#000814,#001f3f);
+ color:#eaf6ff;
+ padding:20px;
+}
+main{
+ max-width:1500px;
+ margin:auto;
+ background:rgba(0,15,35,.95);
+ padding:25px;
+ border-radius:18px;
+ border:2px solid #00bfff;
+}
+h1,h2{color:#00bfff;text-align:center}
+.section{
+ margin-top:25px;
+ padding:15px;
+ border-radius:14px;
+ background:rgba(0,0,0,.4);
+ border:1px solid #00bfff55;
+}
+input,select,textarea,button{
+ width:100%;
+ padding:12px;
+ margin-top:8px;
+ border-radius:10px;
+ border:1px solid #00bfff;
+ background:rgba(255,255,255,.05);
+ color:#fff;
+}
+button{
+ cursor:pointer;
+ background:linear-gradient(45deg,#00bfff,#0066aa);
+ font-weight:bold;
+}
+.host{
+ margin-top:15px;
+ padding:14px;
+ border-radius:12px;
+ background:rgba(0,0,0,.45);
+ border:1px solid #00bfff44;
+}
+.actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ margin-top:8px;
+}
+.details{
+ margin-top:10px;
+ background:#001b33;
+ padding:10px;
+ border-radius:10px;
+ display:none;
+}
+pre{white-space:pre-wrap}
+.hidden{display:none}
+footer{text-align:center;margin-top:30px;color:#7fd3ff}
+</style>
+</head>
+
+<body>
+<main>
+
+<h1>🚀 DAVBOT HOST • SNI • PAYLOAD SYSTEM</h1>
+
+<!-- KEY -->
+<div class="section">
+<h2>🔐 Clé obligatoire</h2>
+<input id="key" placeholder="Entrer la clé">
+<button onclick="unlock()">Débloquer</button>
+</div>
+
+<!-- HOST LIST -->
+<div id="content" class="section hidden">
+<h2>📡 Tous les Hosts / SNI / Payloads</h2>
+<div id="hosts"></div>
+</div>
+
+<!-- GENERATOR -->
+<div id="gen" class="section hidden">
+<h2>⚙️ Générateur</h2>
+<select id="hostSelect"></select>
+<select id="mode">
+<option value="nsi">HA Tunnel (NSI)</option>
+<option value="socks">SocksIP</option>
+<option value="http">HTTP</option>
+<option value="v2ray">V2Ray</option>
+</select>
+<button onclick="generate()">Générer</button>
+<textarea id="result" rows="10" readonly></textarea>
+<button onclick="copy(result.value)">📋 Copier</button>
+</div>
+
+<footer>© 2025 Davbot Network</footer>
+</main>
+
+<script>
+const KEY="Davbot-pro-key:846064543";
+
+const HOSTS=[
+/* ORANGE */
+{n:"Orange – wapshop.gameloft.com",h:"wapshop.gameloft.com",c:`custom_sni=104.19.194.29
+use_realm_host=true
+preserve_sni=false
+use_tcp_payload=false`},
+
+{n:"Orange – www.5g.globe.com.ph",h:"www.5g.globe.com.ph",c:`custom_sni=104.19.194.29
+use_realm_host=true
+preserve_sni=false
+use_tcp_payload=false`},
+
+{n:"Orange – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=104.19.194.29
+use_realm_host=true
+preserve_sni=false
+use_tcp_payload=false`},
+
+/* VODACOM */
+{n:"Vodacom – 172.66.0.96",h:"172.66.0.96",c:`custom_sni=172.66.0.96
+use_realm_host=true
+preserve_sni=false
+use_tcp_payload=false`},
+
+{n:"Vodacom – connectu.vodacom.cd",h:"connectu.vodacom.cd",c:`custom_sni=connectu.vodacom.cd
+custom_resolver=1.1.1.1
+use_realm_host=true
+preserve_sni=true
+use_tcp_payload=false`},
+
+{n:"Vodacom – Superapp.ethiomobilemoney.et",h:"Superapp.ethiomobilemoney.et",c:`custom_sni=Superapp.ethiomobilemoney.et`},
+
+{n:"Vodacom – educ.vodacom.cd",h:"educ.vodacom.cd",c:`custom_sni=educ.vodacom.cd`},
+
+/* AIRTEL */
+{n:"Airtel – www.pdfdrive.com",h:"www.pdfdrive.com",c:`custom_sni=www.pdfdrive.com`},
+
+{n:"Airtel – www.edx.org",h:"www.edx.org",c:`custom_sni=www.edx.org`},
+
+{n:"Airtel – 162.159.140.253",h:"162.159.140.253",c:`custom_sni=162.159.140.253`},
+
+{n:"Airtel DRC – 172.66.0.251",h:"172.66.0.251",c:`custom_sni=172.66.0.251`},
+
+{n:"Airtel – dashboard.airtelquiz.airtel.cd",h:"dashboard.airtelquiz.airtel.cd",c:`custom_sni=dashboard.airtelquiz.airtel.cd`},
+
+/* AFRICELL */
+{n:"Africell – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=premierbetzone.com
+ports=80,443`},
+
+{n:"Africell – 104.18.12.36",h:"104.18.12.36",c:`custom_sni=104.18.12.36`},
+
+{n:"Africell – safefood.net",h:"safefood.net",c:`custom_sni=safefood.net`},
+
+{n:"Africell – www.aerisroves.com",h:"www.aerisroves.com",c:`custom_sni=www.aerisroves.com`},
+
+/* MTN */
+{n:"MTN – stg.onlinecms.mtn.co.za",h:"stg.onlinecms.mtn.co.za",c:`custom_sni=stg.onlinecms.mtn.co.za`},
+
+/* TEST NET */
+{n:"Test Net – www.float.com (V2Ray)",h:"www.float.com",c:`{"add":"www.float.com","port":"443","tls":"tls"}`},
+
+{n:"Test Net – openclassrooms.com",h:"openclassrooms.com",c:`custom_sni=openclassrooms.com`},
+
+{n:"Test Net – mumandbaby.vodacom.cd",h:"mumandbaby.vodacom.cd",c:`custom_sni=mumandbaby.vodacom.cd`},
+
+{n:"Test Net – www.winner.bet",h:"www.winner.bet",c:`custom_sni=www.winner.bet`},
+
+/* STARK VPN */
+{n:"Stark VPN – 91.220.208.30",h:"91.220.208.30",c:`custom_host=91.220.208.30`},
+
+/* PAYLOADS */
+{n:"Orange SocksIP & linklayer Payload",h:"orangeetmoi.orange.cd",c:`GET HTTP/1.1[crlf]
+Host: orangeetmoi.orange.cd[crlf]
+X-Online-Host: orangeetmoi.orange.cd[crlf]
+Connection: keep-alive[crlf][crlf]`},
+
+{n:"Orange LinkLayer et socksip Payload",h:"monoprofilorange.cd",c:`HTTP/1.1 200[crlf]
+Host: http://monoprofilorange.cd[crlf][crlf]!`},
+
+{n:"airtel LinkLayer & socksip UPD",h:"1-65535",c:`1-65535`},
+
+{n:"airtel LinkLayer et socksip Payload",h:"1-65535",c:`1-65535`}
+];
+
+function unlock(){
+ if(document.getElementById("key").value!==KEY){
+  alert("❌ Clé incorrecte");
+  return;
+ }
+ document.getElementById("content").classList.remove("hidden");
+ document.getElementById("gen").classList.remove("hidden");
+ load();
+}
+
+function load(){
+ const h=document.getElementById("hosts");
+ const s=document.getElementById("hostSelect");
+ h.innerHTML=""; s.innerHTML="";
+ HOSTS.forEach((x,i)=>{
+  h.innerHTML+=`
+   <div class="host">
+    <b>${x.n}</b><br><i>${x.h}</i>
+    <div class="actions">
+     <button onclick="copy('${x.h}')">Copier Host</button>
+     <button onclick="copy(\`${x.c}\`)">Copier Config</button>
+     <button onclick="toggle(${i})">Détails</button>
+    </div>
+    <div id="d${i}" class="details"><pre>${x.c}</pre></div>
+   </div>`;
+  s.innerHTML+=`<option value="${x.h}">${x.h}</option>`;
+ });
+}
+
+function toggle(i){
+ const d=document.getElementById("d"+i);
+ d.style.display=d.style.display==="block"?"none":"block";
+}
+
+function generate(){
+ const host=document.getElementById("hostSelect").value;
+ const mode=document.getElementById("mode").value;
+ let out="";
+ if(mode==="nsi") out=`custom_sni=${host}\nuse_realm_host=true\npreserve_sni=false\nuse_tcp_payload=false`;
+ if(mode==="socks") out=`server=${host}\nport=443`;
+ if(mode==="http") out=`host=${host}\nport=80`;
+ if(mode==="v2ray") out=`{"add":"${host}","port":"443","tls":"tls"}`;
+ document.getElementById("result").value=out;
+}
+
+function copy(t){navigator.clipboard.writeText(t);}
+</script>
+</body>
+</html>
