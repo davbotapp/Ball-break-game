@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name="google-site-verification" content="YvfIvLYwUp-8q6YSySsEBCG2iuqVcRpz8kEAY4XLDfM" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Davbot VPN — Achat</title>
+<style>
+body{margin:0;font-family:Segoe UI, Tahoma, Geneva, Verdana,sans-serif;background:linear-gradient(135deg,#001022,#001d3d);color:#eee;padding:20px}
+header{font-size:2.5rem;color:#00cfff;text-align:center;margin-bottom:18px;letter-spacing:.12em}
+main{max-width:780px;margin:0 auto;background:rgba(0,0,0,.6);padding:26px;border-radius:12px;border:2px solid #00cfff;box-shadow:0 0 20px #00cfff66}
+h2,h3{color:#00cfff;margin:8px 0}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.col{flex:1;min-width:220px}
+.serverItem{padding:12px;border-radius:10px;border:1px solid #00cfff55;background:rgba(0,0,0,.35);cursor:pointer;margin:8px 0}
+.serverItem:hover{background:rgba(0,0,0,.55)}
+select,input,button,a,textarea{font-size:1rem;padding:10px;border-radius:8px;border:1px solid #00cfff;background:rgba(255,255,255,0.06);color:#fff;width:100%;box-sizing:border-box}
+textarea{resize:vertical}
+button{cursor:pointer;background:linear-gradient(45deg,#00cfff,#005f7f);border:none;box-shadow:0 0 10px #00cfff}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+#downloadBtn{display:none; text-decoration:none; text-align:center; padding:10px; border-radius:8px; background:#005f7f; color:#fff; font-weight:700; box-shadow:0 0 10px #00cfff}
+.prices{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.priceCard{background:rgba(0,0,0,.35);padding:12px;border-radius:10px;border:1px solid #00cfff55;min-width:140px}
+.note{font-size:.9rem;color:#ffd54f;background:rgba(255,213,79,0.06);padding:8px;border-radius:8px;margin-top:10px}
+.payBox{margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid #00cfff55}
+.small{font-size:.9rem;color:#cde9ff}
+.muted{color:#aaa;font-size:.9rem}
+.center{text-align:center}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>🚀 DAVBOT ACHAT FICHIER VPN ♻️</header>
+<main>
+<h2>Acheter un fichier (HA / SocksIP / LinkLayer / HTTP Custom)</h2>
+
+<div id="step1" class="step">
+  <button id="startBtn">Commencer</button>
+</div>
+
+<!-- CHOIX SERVEUR -->
+<div id="serverStep" class="hidden">
+  <h3>1) Choisissez un serveur</h3>
+  <div class="row">
+    <div class="col serverItem" data-name="Davbot France 1" data-port="1194" data-mode="UDP">🇫🇷 Davbot France 1 — UDP — 1194</div>
+    <div class="col serverItem" data-name="Davbot USA" data-port="443" data-mode="TCP">🇺🇸 Davbot USA — TCP — 443</div>
+    <div class="col serverItem" data-name="Davbot Serveur" data-port="8080" data-mode="HTTP">🌍 Davbot Serveur — HTTP — 8080</div>
+    <div class="col serverItem" data-name="Davbot RDC" data-port="443" data-mode="SSL/SSH">🇨🇩 Davbot RDC — SSL/SSH — 443</div>
+    <div class="col serverItem" data-name="Custom Server" data-port="0" data-mode="CUSTOM">💻 Votre serveur</div>
+  </div>
+</div>
+
+<!-- FORMULAIRE CUSTOM -->
+<div id="customFormStep" class="hidden">
+  <h3>Serveur personnalisé — Créez votre fichier</h3>
+  <input id="customVpnName" placeholder="Nom du fichier ex : MonVPN" />
+  <select id="customFileType">
+    <option value="hat">HA Tunnel (.hat)</option>
+    <option value="socks">SocksIP (.sip)</option>
+    <option value="ink">LinkLayer (.link)</option>
+    <option value="http">HTTP Custom (.hc)</option>
+  </select>
+  <input id="customPort" type="number" placeholder="Port ex : 1194" />
+  <select id="customConfig">
+    <option value="">Choisissez la configuration / protocole</option>
+  </select>
+  <button id="generateCustomBtn" disabled>Générer le fichier</button>
+</div>
+
+<!-- TYPE -->
+<div id="fileTypeStep" class="hidden">
+  <h3>2) Choisissez le type de fichier</h3>
+  <select id="fileType">
+       <option value="">Non déterminé</option>
+    <option value="hat">HA Tunnel (.hat)</option>
+    <option value="socks">SocksIP (.sip)</option>
+    <option value="ink">LinkLayer (.link)</option>
+    <option value="http">HTTP Custom (.hc)</option>
+  </select>
+</div>
+
+<!-- DUREE -->
+<div id="durationStep" class="hidden">
+  <h3>3) Durée (choisissez)</h3>
+  <div class="row">
+    <div class="col">
+      <select id="duration">
+        <option value="">Non déterminé</option>
+        <option value="3">3 jours</option>
+        <option value="7">7 jours</option>
+        <option value="30">30 jours</option>
+      </select>
+    </div>
+    <div class="col">
+      <div class="prices" id="priceCards"></div>
+    </div>
+  </div>
+  <div class="note">Les prix affichés peuvent être modifiés dans le script (variable <code>PRICES</code>).</div>
+</div>
+
+<!-- NOM -->
+<div id="nameStep" class="hidden">
+  <h3>4) Nom du fichier</h3>
+  <input id="vpnName" placeholder="Ex : DavbotPremium" />
+  <div style="height:10px"></div>
+  <button id="generateBtn" disabled>Générer le fichier (préparer)</button>
+</div>
+
+<!-- TÉLÉCHARGEMENT -->
+<div id="afterGen" class="hidden">
+  <h3>Fichier prêt</h3>
+  <a id="downloadBtn">Télécharger le fichier</a>
+</div>
+
+<!-- PAIEMENT -->
+<div id="paymentStep" class="hidden">
+  <h3>5) Paiement</h3>
+  <label class="small">Votre nom complet</label>
+  <input id="clientName" placeholder="Nom complet" />
+  <div class="payBox">
+    <h4>Choisir la méthode</h4>
+    <select id="paymentMethod">
+      <option value="orange">Orange Money</option>
+      <option value="airtel">Airtel Money</option>
+    </select>
+    <label class="small" style="margin-top:8px">Numéro / Référence de paiement</label>
+    <input id="paymentRef" placeholder="Ex : 0999XXXXXX ou REF12345" />
+    <div style="height:10px"></div>
+    <button id="iPaidBtn">J'ai payé — Envoyer la preuve (WhatsApp)</button>
+  </div>
+  <div style="height:12px"></div>
+  <div class="small muted">Numéros officiels :</div>
+  <div class="small">Orange Money : <strong id="orangeNum"></strong></div>
+  <div class="small">Airtel Money : <strong id="airtelNum"></strong></div>
+</div>
+
+<div id="summary" class="hidden">
+  <h3>Résumé de la commande</h3>
+  <div class="small" id="summaryText"></div>
+</div>
+
+
+<div style="height:8px"></div>
+<div class="muted center">En utilisant ce service, vous acceptez les <a href="#" style="color:#ffd54f">conditions d'utilisation</a>.</div>
+
+
+
+</main>
+
+<script>
+const ADMIN_WA = "243846064543"; 
+const ORANGE_NUMBER = "+243846064543";
+const AIRTEL_NUMBER = "+243982697752";
+const PRICES = { "3": "0.2 USD","7": "2.00 USD", "30": "5.00 USD" };
+
+const DEFAULT_SERVER = null;
+const DEFAULT_DURATION = null;
+
+const startBtn = document.getElementById('startBtn');
+const serverStep = document.getElementById('serverStep');
+const fileTypeStep = document.getElementById('fileTypeStep');
+const durationStep = document.getElementById('durationStep');
+const nameStep = document.getElementById('nameStep');
+const paymentStep = document.getElementById('paymentStep');
+const afterGen = document.getElementById('afterGen');
+const summary = document.getElementById('summary');
+const priceCards = document.getElementById('priceCards');
+const downloadBtn = document.getElementById('downloadBtn');
+const generateBtn = document.getElementById('generateBtn');
+const vpnNameInput = document.getElementById('vpnName');
+
+/* Custom form */
+const customFormStep = document.getElementById('customFormStep');
+const customVpnName = document.getElementById('customVpnName');
+const customFileType = document.getElementById('customFileType');
+const customPort = document.getElementById('customPort');
+const customConfig = document.getElementById('customConfig');
+const generateCustomBtn = document.getElementById('generateCustomBtn');
+
+const CONFIG_OPTIONS = {
+  hat: ['NSI', 'OpenVPN', 'UDP'],
+  socks: ['UDP', 'TCP', 'Request'],
+  ink: ['UDP', 'TCP'],
+  http: ['HTTP', 'HTTPS', 'V2Ray']
+};
+
+let selectedServer = null;
+let selectedType = null;
+let selectedDuration = null;
+let generatedFile = { name:'', ext:'', content:'', serverName:'Non déterminé' };
+
+/* Init price cards */
+function renderPrices() {
+  priceCards.innerHTML = '';
+  for (const d of ['3','7','30']) {
+    const card = document.createElement('div');
+    card.className = 'priceCard';
+    card.innerHTML = `<strong>${d} j</strong><div class="small">${PRICES[d] || '-'}</div>`;
+    priceCards.appendChild(card);
+  }
+}
+renderPrices();
+
+/* Start */
+startBtn.onclick = () => {
+  startBtn.style.display = 'none';
+  serverStep.classList.remove('hidden');
+};
+
+/* Server selection */
+document.querySelectorAll('.serverItem').forEach(el=>{
+  el.onclick = () => {
+    selectedServer = { name: el.dataset.name, port: el.dataset.port, mode: el.dataset.mode };
+    serverStep.classList.add('hidden');
+
+    if(selectedServer.name === "Custom Server") {
+      customFormStep.classList.remove('hidden');
+      fileTypeStep.classList.add('hidden');
+      durationStep.classList.add('hidden');
+      nameStep.classList.add('hidden');
+      afterGen.classList.add('hidden');
+      paymentStep.classList.add('hidden');
+      summary.classList.add('hidden');
+    } else {
+      customFormStep.classList.add('hidden');
+      fileTypeStep.classList.remove('hidden');
+    }
+  };
+});
+
+/* Type -> Duration */
+document.getElementById('fileType').onchange = () => {
+  selectedType = document.getElementById('fileType').value;
+  fileTypeStep.classList.add('hidden');
+  durationStep.classList.remove('hidden');
+  updatePriceCardsHighlight();
+};
+
+/* Update price highlight */
+function updatePriceCardsHighlight(){
+  const dur = document.getElementById('duration').value || DEFAULT_DURATION;
+  selectedDuration = dur;
+  Array.from(priceCards.children).forEach((c, idx)=>{
+    c.style.outline = (['3','7','30'][idx] === dur) ? '2px solid #ffd54f' : 'none';
+  });
+}
+document.getElementById('duration').onchange = () => {
+  updatePriceCardsHighlight();
+  durationStep.classList.add('hidden');
+  nameStep.classList.remove('hidden');
+};
+
+/* Enable generate button when name filled */
+vpnNameInput.addEventListener('input', ()=> {
+  generateBtn.disabled = vpnNameInput.value.trim().length === 0;
+});
+
+/* Format date YYYY-MM-DD */
+function formatDate(d) { return d.toISOString().split('T')[0]; }
+
+/* Get extension by type */
+function getExt(type){
+  switch(type){
+    case 'hat': return '.hat';
+    case 'socks': return '.sip';
+    case 'ink': return '.link';
+    case 'http': return '.hc';
+    default: return '.txt';
+  }
+}
+
+/* Generate VPN File */
+function generateVPNFile(name, type, server, duration) {
+  const ext = getExt(type);
+  const createdAt = new Date();
+  const expiresAt = new Date();
+  expiresAt.setDate(createdAt.getDate() + (duration ? parseInt(duration) : 0));
+  const creationDate = formatDate(createdAt);
+  const expirationDate = duration ? formatDate(expiresAt) : "Non déterminé";
+
+  let serverName = server ? server.name : "Non déterminé";
+  let serverPort = server ? server.port : "-";
+  let serverMode = server ? server.mode : "-";
+  const isOfficial = ["Davbot France 1","Davbot USA","Davbot Serveur","Davbot RDC"].includes(serverName);
+
+  let content = `# Davbot Service\n# Fichier généré par ${name}\n# Créé le ${creationDate}, Expire le ${expirationDate}\n`;
+
+  if(type === 'hat'){
+    content += `type=HA_TUNNEL\nserver=${serverName}\nport=${serverPort}\nprotocol=NSI\nduration=${duration || "Non déterminé"} jours\nname=${name}`;
+  } else if(type === 'socks'){
+    content += `type=SOCKS_IP\nserver=${serverName}\nport=${serverPort}\nprotocol=UDP\nmode=Request\npayload=Standard\nduration=${duration || "Non déterminé"} jours\nname=${name}`;
+  } else if(type === 'ink'){
+    content += `type=LINKLAYER\nendpoint=${serverName}\nport=${serverPort}\nmode=UDP\npayload=Standard\nvalid_for=${duration || "Non déterminé"} jours\nname=${name}`;
+  } else if(type === 'http'){
+    content += `type=HTTP_CUSTOM\nserver=${serverName}\nport=${serverPort}\nprotocol=UDP\nv2ray=true\nduration=${duration || "Non déterminé"} jours\nname=${name}`;
+  }
+
+  return { name, ext, content, isOfficial, creationDate, expirationDate, serverName };
+}
+
+/* Generate official / server file */
+generateBtn.onclick = () => {
+  const name = vpnNameInput.value.trim() || 'MonVPN';
+  const type = document.getElementById('fileType').value || 'hat';
+  const server = selectedServer || DEFAULT_SERVER;
+  const duration = document.getElementById('duration').value || DEFAULT_DURATION;
+
+  generatedFile = generateVPNFile(name, type, server, duration);
+
+  if(generatedFile.isOfficial){
+    afterGen.classList.remove('hidden');
+    paymentStep.classList.remove('hidden');
+    summary.classList.remove('hidden');
+    downloadBtn.style.display = 'none'; // Pas de téléchargement automatique
+  } else {
+    const blob = new Blob([generatedFile.content], {type:"text/plain"});
+    downloadBtn.href = URL.createObjectURL(blob);
+    downloadBtn.download = generatedFile.name + generatedFile.ext;
+    downloadBtn.style.display = 'inline-block';
+    afterGen.classList.remove('hidden');
+    paymentStep.classList.add('hidden');
+    summary.classList.add('hidden');
+    downloadBtn.click();
+  }
+
+  document.getElementById('summaryText').textContent =
+    `Nom: ${generatedFile.name} — Fichier: ${generatedFile.name + generatedFile.ext} — Serveur: ${generatedFile.serverName} — Durée: ${duration || "Non déterminé"} jours — Créé: ${generatedFile.creationDate} — Expire: ${generatedFile.expirationDate}${generatedFile.isOfficial?' — ⚠ Paiement requis':''}`;
+};
+
+/* "J'ai payé" button */
+document.getElementById('iPaidBtn').onclick = () => {
+  const cname = document.getElementById('clientName').value.trim();
+  const pref = document.getElementById('paymentRef').value.trim();
+  const payMethod = document.getElementById('paymentMethod').value;
+  const duration = document.getElementById('duration').value || "Non déterminé";
+  const priceText = PRICES[duration] || '-';
+
+  if (!cname) return alert('Entrez votre nom complet.');
+  if (!pref) return alert('Entrez la référence ou numéro du paiement.');
+
+  const paymentReadable = payMethod === 'orange' ? `Orange Money (${ORANGE_NUMBER})` : `Airtel Money (${AIRTEL_NUMBER})`;
+
+  const msg = `Bonjour, je suis ${cname}.
+J'ai payé la commande Davbot Service.
+
+Détails :
+- Nom client : ${cname}
+- Fichier : ${generatedFile.name}${generatedFile.ext}
+- Serveur : ${generatedFile.serverName || "Non déterminé"}
+- Durée : ${duration} jours
+- Montant : ${priceText}
+- Méthode : ${paymentReadable}
+- Référence / Numéro : ${pref}
+
+Merci de valider et d'envoyer le fichier.`.trim();
+
+  window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`);
+};
+
+document.getElementById('orangeNum').textContent = ORANGE_NUMBER;
+document.getElementById('airtelNum').text
+document.getElementById('airtelNum').textContent = AIRTEL_NUMBER;
+
+/* Custom form logic */
+function checkCustomForm(){
+  generateCustomBtn.disabled = !(
+    customVpnName.value.trim() &&
+    customPort.value.trim() &&
+    customConfig.value.trim()
+  );
+}
+
+/* Mettre à jour la configuration disponible selon le type choisi */
+customFileType.addEventListener('change', () => {
+  const type = customFileType.value;
+  customConfig.innerHTML = '<option value="">Choisissez la configuration / protocole</option>';
+  if (CONFIG_OPTIONS[type]) {
+    CONFIG_OPTIONS[type].forEach(cfg => {
+      const option = document.createElement('option');
+      option.value = cfg;
+      option.textContent = cfg;
+      customConfig.appendChild(option);
+    });
+  }
+  checkCustomForm();
+});
+
+customVpnName.addEventListener('input', checkCustomForm);
+customPort.addEventListener('input', checkCustomForm);
+customConfig.addEventListener('change', checkCustomForm);
+
+/* Génération du fichier VPN personnalisé */
+generateCustomBtn.onclick = () => {
+  const name = customVpnName.value.trim() || 'MonVPN';
+  const type = customFileType.value || 'hat';
+  const ext = getExt(type);
+
+  let content = `# Fichier VPN personnalisé
+# Nom : ${name}
+# Type : ${type.toUpperCase()}
+# Port : ${customPort.value || "Non déterminé"}
+# Configuration choisie : ${customConfig.value || "Non déterminé"}
+`;
+
+  // Paramètres spécifiques selon le type
+  if(type === 'hat'){
+    content += `protocol=NSI\npayload=Standard\n`;
+  } else if(type === 'socks'){
+    content += `protocol=UDP\nmode=Request\npayload=Standard\n`;
+  } else if(type === 'ink'){
+    content += `mode=UDP\npayload=Standard\n`;
+  } else if(type === 'http'){
+    content += `protocol=UDP\nv2ray=true\n`;
+  }
+
+  // Création du fichier et téléchargement immédiat
+  const blob = new Blob([content], {type: "text/plain"});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name + ext; // nom + extension
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  alert(`Fichier ${name}${ext} généré et téléchargé !`);
+};
+</script>
+</body>
+    </html>
+    
+    
