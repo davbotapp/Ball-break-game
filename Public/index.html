@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Davbot service | Vente VPN Premium</title>
+<meta name="description" content="Davbot Service – Vente de fichiers VPN premium et solutions digitales.">
+<link rel="icon" href="https://i.imgur.com/naY3qiQ.jpeg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b0f14; --card:#151b23; --text:#eaeaea; --accent:#00ffaa;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{background:var(--bg);color:var(--text);line-height:1.6;transition:.4s;}
+a{text-decoration:none;color:inherit;}
+
+/* NAVIGATION */
+nav{
+  position:fixed;top:0;width:100%;background:rgba(0,0,0,.85);
+  display:flex;justify-content:space-between;align-items:center;padding:15px 30px;z-index:1000;
+}
+.logo{font-size:24px;font-weight:bold;color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:15px;}
+#themeToggle{cursor:pointer;font-size:20px;color:var(--accent);}
+.dropdown{position:relative;}
+.dropdown-content{
+  display:none;position:absolute;right:0;background:#151b23;
+  min-width:180px;border-radius:10px;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,.5);
+}
+.dropdown-content a{
+  display:block;padding:12px 15px;color:var(--accent);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.dropdown-content a:hover{background:var(--accent);color:#000;}
+.dropdown:hover .dropdown-content{display:block;}
+
+/* HEADER */
+header{
+  position:relative;text-align:center;padding:140px 20px 220px;overflow:hidden;
+}
+header h1{font-size:3rem;color:var(--accent);text-shadow:0 0 25px rgba(0,255,255,.5);}
+header p{margin-top:15px;color:#7fffe0;font-size:1.2rem;}
+.hero-actions{margin-top:40px;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;}
+.hero-btn{
+  padding:12px 25px;border-radius:22px;font-weight:800;
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--accent),#00e0ff);
+  color:#000;transition:.35s;cursor:pointer;
+  perspective:800px;
+}
+.hero-btn.secondary{background:transparent;color:var(--accent);border:2px solid var(--accent);}
+.hero-btn:hover{transform:rotateX(10deg) translateY(-5px) scale(1.06);}
+
+/* PARTICULES */
+.particle{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:#00ffaa;animation:float 5s infinite;
+}
+@keyframes float{
+  0%{transform:translate(0,0);}
+  50%{transform:translate(calc(var(--dx)*1px),calc(var(--dy)*1px));}
+  100%{transform:translate(0,0);}
+}
+
+/* COMMUNITY */
+.community{margin-top:25px;display:flex;justify-content:center;gap:20px;}
+.community a{font-size:1.8rem;padding:14px;border-radius:50%;background:#10151c;color:var(--accent);transition:.3s;}
+.community a:hover{transform:scale(1.3) rotate(10deg);background:var(--accent);color:#000;}
+
+/* BADGES */
+.badges{margin-top:30px;display:flex;justify-content:center;gap:15px;flex-wrap:wrap;}
+.badge{padding:8px 14px;border-radius:12px;background:#10151c;color:var(--accent);font-size:.85rem;border:1px solid var(--accent);}
+
+/* SECTIONS */
+section{padding:90px 20px;}
+h1{text-align:center;color:var(--accent);margin-bottom:15px;}
+.section-desc{text-align:center;max-width:800px;margin:0 auto 40px;opacity:.85;}
+
+/* GRID CARDS 3D PARALLAX */
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:25px;}
+.card{
+  background:var(--card);
+  width:280px;
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+  box-shadow:0 15px 30px rgba(0,0,0,.3);
+  transition:transform .3s ease, box-shadow .3s ease, opacity .4s, filter .4s;
+  transform-style:preserve-3d;
+  cursor:pointer;
+  opacity:0;transform:translateY(30px);
+}
+.card.show{opacity:1;transform:translateY(0);}
+.card i{font-size:40px;color:var(--accent);margin-bottom:15px;}
+.card h3{margin-bottom:10px;}
+.card-buttons{display:flex;justify-content:center;gap:10px;margin-top:10px;}
+.card button{
+  padding:8px 12px;border:none;border-radius:8px;
+  background:var(--accent);color:#000;font-weight:bold;cursor:pointer;
+  transition:.3s;
+}
+.card button:hover{background:#00ff99;transform:scale(1.1);}
+
+/* Pulse like animation */
+@keyframes pulseLike{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.4);}
+  100%{transform:scale(1);}
+}
+
+/* CONTACT FORM */
+.contact-content{max-width:700px;margin:auto;padding:60px 20px;color:var(--text);}
+.contact-content input, .contact-content textarea{
+  width:100%;padding:12px 15px;border-radius:8px;border:none;outline:none;font-size:16px;background:var(--card);color:var(--accent);margin-bottom:15px;
+}
+.contact-content button{
+  background:var(--accent);border:none;color:#111;padding:15px;font-weight:bold;cursor:pointer;border-radius:30px;transition:.3s;width:100%;
+}
+.contact-content button:hover{background:#0077b6;color:#fff;}
+
+/* FOOTER */
+footer{text-align:center;padding:20px;border-top:2px solid var(--accent);}
+
+/* STATUS DOT */
+.status{display:flex;align-items:center;gap:8px;font-size:14px;}
+.dot{width:10px;height:10px;border-radius:50%;animation:pulse 1.5s infinite;}
+.dot.online{background:#00ff90;}
+.dot.offline{background:#ff3f3f;}
+@keyframes pulse{
+0%{box-shadow:0 0 0 0 rgba(0,255,144,.7);}
+70%{box-shadow:0 0 0 10px rgba(0,255,144,0);}
+100%{box-shadow:0 0 0 0 rgba(0,255,144,0);}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Davbot Service</div>
+  <div class="nav-right">
+    <div class="status">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText"></span>
+    </div>
+    <div id="themeToggle"><i class="fas fa-moon"></i></div>
+    <div class="dropdown">
+      <i class="fas fa-cog" style="font-size:20px;color:var(--accent);cursor:pointer;"></i>
+      <div class="dropdown-content">
+        <a href="#">Changer de thème</a>
+        <a href="#">S'inscrire</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">Sécurité</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <h1 id="typeH1"></h1>
+  <p id="subtitle"></p>
+  <div class="hero-actions">
+    <a href="vpn.html" class="hero-btn"><i class="fas fa-lock"></i> Acheter VPN</a>
+    <a href="host.html" class="hero-btn secondary"><i class="fab fa-whatsapp"></i> Générer Host</a>
+  </div>
+  <div class="community">
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <a href="#"><i class="fab fa-telegram"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <h1>À propos</h1>
+  <p class="section-desc">Davbot Service est votre partenaire numérique pour tous vos projets. Nous transformons vos idées en solutions digitales professionnelles et sécurisées.</p>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <h1>Nos Services</h1>
+  <p class="section-desc">Cliquez sur un service pour le commander ou aimer :</p>
+  <div class="grid" id="servicesGrid">
+    <div class="card" data-likes="34">
+      <i class="fas fa-mobile-alt"></i><h3>Application mobile & web</h3>
+      <div class="card-buttons">
+        <button onclick="orderService(this)">Commander</button>
+        <button onclick="likeService(this)">👍 34</button>
+      </div>
+    </div>
+    <div class="card" data-likes="5">
+      <i class="fas fa-laptop-code"></i><h3>Site web pro</h3>
+      <div class="card-buttons">
+        <button onclick="orderService(this)">Commander</button>
+        <button onclick="likeService(this)">👍 5</button>
+      </div>
+    </div>
+    <div class="card" data-likes="65">
+      <i class="fas fa-server"></i><h3>Hébergement total</h3>
+      <div class="card-buttons">
+        <button onclick="orderService(this)">Commander</button>
+        <button onclick="likeService(this)">👍 65</button>
+      </div>
+    </div>
+    <div class="card" data-likes="17">
+      <i class="fas fa-shield-alt"></i><h3>Sécurité des comptes</h3>
+      <div class="card-buttons">
+        <button onclick="orderService(this)">Commander</button>
+        <button onclick="likeService(this)">👍 17</button>
+      </div>
+    </div>
+    <div class="card" data-likes="12">
+      <i class="fas fa-wifi"></i><h3>Configuration VPN Premium</h3>
+      <div class="card-buttons">
+        <button onclick="orderService(this)">Commander</button>
+        <button onclick="likeService(this)">👍 12</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI NOUS CHOISIR -->
+<section id="why-us">
+  <h1>Pourquoi nous choisir ?</h1>
+  <p class="section-desc">Davbot Service accompagne particuliers et entreprises avec des solutions fiables, modernes et adaptées au marché numérique africain et international.</p>
+  <div class="grid" id="whyGrid">
+    <div class="card" data-likes="12">
+      <i class="fas fa-bolt"></i>
+      <h3>Rapidité</h3>
+      <p>Livraison rapide et respect des délais.</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 12</button>
+      </div>
+    </div>
+    <div class="card" data-likes="25">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Sécurité</h3>
+      <p>Protection avancée de vos données et projets.</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 25</button>
+      </div>
+    </div>
+    <div class="card" data-likes="30">
+      <i class="fas fa-award"></i>
+      <h3>Professionnalisme</h3>
+      <p>Qualité, sérieux et accompagnement.</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 30</button>
+      </div>
+    </div>
+    <div class="card" data-likes="18">
+      <i class="fas fa-globe"></i>
+      <h3>Vision globale</h3>
+      <p>Solutions adaptées au monde digital moderne.</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 18</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÉQUIPE DEV -->
+<section id="team">
+  <h1>Notre Équipe Dev</h1>
+  <p class="section-desc">Une équipe passionnée par la technologie, l’innovation et la performance.</p>
+  <div class="grid" id="teamGrid">
+    <div class="card" data-likes="40">
+      <i class="fas fa-user-tie"></i>
+      <h3>David Mpongo</h3>
+      <p>Fondateur & Lead Developer<br>Web • IA • Automatisation</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 40</button>
+      </div>
+    </div>
+    <div class="card" data-likes="28">
+      <i class="fas fa-code"></i>
+      <h3>Développeurs Web</h3>
+      <p>Experts HTML, CSS, JavaScript, Backend & API</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 28</button>
+      </div>
+    </div>
+    <div class="card" data-likes="35">
+      <i class="fas fa-robot"></i>
+      <h3>Spécialistes IA</h3>
+      <p>Chatbots, IA WhatsApp, Facebook, automatisations</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 35</button>
+      </div>
+    </div>
+    <div class="card" data-likes="22">
+      <i class="fas fa-headset"></i>
+      <h3>Support technique</h3>
+      <p>Assistance continue et suivi client</p>
+      <div class="card-buttons">
+        <button onclick="likeService(this)">👍 22</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-content">
+    <h1>Contactez-nous via WhatsApp</h1>
+    <input type="text" id="name" placeholder="Votre nom" required>
+    <input type="text" id="phone" placeholder="Votre téléphone (optionnel)">
+    <textarea id="message" placeholder="Votre message" required></textarea>
+    <button onclick="sendWhatsApp()">Envoyer via WhatsApp</button>
+  </div>
+</section>
+
+<footer>© 2026 Davbot Service — Tous droits réservés</footer>
+
+<script>
+// Mode sombre / clair
+const toggle = document.getElementById("themeToggle");
+toggle.onclick = () => {
+  document.body.classList.toggle("light");
+  toggle.innerHTML = document.body.classList.contains("light") 
+    ? '<i class="fas fa-sun"></i>'
+    : '<i class="fas fa-moon"></i>';
+};
+
+// Lettre par lettre
+function typeEffect(el, text, speed, callback){
+  let i=0;
+  const timer=setInterval(()=>{
+    el.textContent+=text.charAt(i);
+    i++;
+    if(i>=text.length){clearInterval(timer); if(callback)callback();}
+  }, speed);
+}
+typeEffect(document.getElementById("typeH1"), "BIENVENUE CHEZ DAVBOT SERVICE", 100,
+  ()=>typeEffect(document.getElementById("subtitle"), "Votre partenaire numérique de confiance pour vos projets", 30)
+);
+
+// Statut en ligne/hors-ligne
+function updateStatus(){
+  const now = new Date();
+  const h = now.getHours();
+  const dot = document.getElementById("statusDot");
+  const text = document.getElementById("statusText");
+  if(h>=7 && h<18){dot.classList.add("online"); dot.classList.remove("offline"); text.textContent="En ligne";}
+  else{dot.classList.add("offline"); dot.classList.remove("online"); text.textContent="Hors-ligne";}
+}
+updateStatus(); setInterval(updateStatus, 60000);
+
+// WhatsApp contact
+function sendWhatsApp(){
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const message = document.getElementById("message").value;
+  let url = `https://wa.me/243000000000?text=Nom:%20${encodeURIComponent(name)}%0ATéléphone:%20${encodeURIComponent(phone)}%0AMessage:%20${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
+}
+
+// Commander service via WhatsApp
+function orderService(btn){
+  const service = btn.closest('.card').querySelector("h3").textContent;
+  let url = `https://wa.me/243000000000?text=Je souhaite commander le service: ${encodeURIComponent(service)}`;
+  window.open(url,"_blank");
+}
+
+// Like dynamique avec pulse
+
+
+function likeService(btn){
+  const card = btn.closest('.card');
+  let likes = parseInt(card.dataset.likes);
+  likes++;
+  card.dataset.likes = likes;
+  btn.textContent = `👍 ${likes}`;
+  btn.style.animation = 'pulseLike 0.5s';
+  setTimeout(()=>{btn.style.animation='';}, 500);
+}
+
+// Animation progressive cascade + 3D interaction
+const allCards = document.querySelectorAll(".card");
+allCards.forEach((c, i) => {
+  setTimeout(()=>{c.classList.add("show");}, i*200);
+});
+
+// Effet 3D sur hover
+allCards.forEach(card => {
+  card.addEventListener("mousemove", (e)=>{
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width/2;
+    const centerY = rect.height/2;
+    const rotateX = ((y - centerY)/centerY)*10;
+    const rotateY = ((x - centerX)/centerX)*10;
+    card.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    card.style.boxShadow = `${rotateY*2}px ${-rotateX*2}px 25px rgba(0,191,255,.6)`;
+  });
+  card.addEventListener("mouseleave", ()=>{
+    card.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+    card.style.boxShadow = "0 15px 30px rgba(0,0,0,.3)";
+  });
+});
+</script>
+</body>
+</html>
