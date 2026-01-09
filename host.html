@@ -21,12 +21,12 @@ main{
  border-radius:18px;
  border:2px solid #00bfff;
 }
-h1,h2{color:#00bfff;text-align:center}
+h1,h2{text-align:center;color:#00bfff}
 .section{
- margin-top:25px;
+ margin-top:20px;
  padding:15px;
+ background:rgba(0,0,0,.45);
  border-radius:14px;
- background:rgba(0,0,0,.4);
  border:1px solid #00bfff55;
 }
 input,select,textarea,button{
@@ -36,54 +36,52 @@ input,select,textarea,button{
  border-radius:10px;
  border:1px solid #00bfff;
  background:rgba(255,255,255,.05);
- color:#fff;
+ color:white;
 }
 button{
  cursor:pointer;
- background:linear-gradient(45deg,#00bfff,#0066aa);
  font-weight:bold;
+ background:linear-gradient(45deg,#00bfff,#0066aa);
 }
+.hidden{display:none}
 .host{
  margin-top:15px;
  padding:14px;
  border-radius:12px;
- background:rgba(0,0,0,.45);
+ background:rgba(0,0,0,.5);
  border:1px solid #00bfff44;
 }
-.actions{
- display:flex;
- flex-wrap:wrap;
- gap:10px;
- margin-top:8px;
-}
-.details{
- margin-top:10px;
- background:#001b33;
- padding:10px;
- border-radius:10px;
- display:none;
-}
-pre{white-space:pre-wrap}
-.hidden{display:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.details{display:none;margin-top:10px;background:#001b33;padding:10px;border-radius:10px}
 footer{text-align:center;margin-top:30px;color:#7fd3ff}
 </style>
 </head>
 
 <body>
 <main>
-
 <h1>🚀 DAVBOT HOST • SNI • PAYLOAD SYSTEM</h1>
 
+<!-- COMPTE -->
+<div id="account" class="section">
+<h2>👤 Compte utilisateur</h2>
+<input id="user" placeholder="Nom d'utilisateur">
+<input id="pass" type="password" placeholder="Mot de passe">
+<button onclick="register()">Créer compte</button>
+<button onclick="login()">Connexion</button>
+<p id="accMsg"></p>
+</div>
+
 <!-- KEY -->
-<div class="section">
-<h2>🔐 Clé obligatoire</h2>
+<div id="keyBox" class="section hidden">
+<h2>🔐 Clé d’accès (2 minutes)</h2>
 <input id="key" placeholder="Entrer la clé">
 <button onclick="unlock()">Débloquer</button>
+<p id="timer"></p>
 </div>
 
 <!-- HOST LIST -->
 <div id="content" class="section hidden">
-<h2>📡 Tous les Hosts / SNI / Payloads</h2>
+<h2>📡 Tous les Hosts</h2>
 <div id="hosts"></div>
 </div>
 
@@ -102,121 +100,120 @@ footer{text-align:center;margin-top:30px;color:#7fd3ff}
 <button onclick="copy(result.value)">📋 Copier</button>
 </div>
 
-<footer>© 2025 Davbot Network</footer>
+<footer>© 2026 Davbot Network</footer>
 </main>
 
 <script>
-const KEY="Davbot-pro-key:846064543";
+/* ===== KEYS ===== */
+const KEY_ALL="Davbot-pro-key:846064543";
+const KEY_VA="Davbot-va-key:112233";
+let FILTER="NONE", timerInt;
 
+/* ===== HOSTS (TOUS TES HOSTS) ===== */
 const HOSTS=[
 /* ORANGE */
-{n:"Orange – wapshop.gameloft.com",h:"wapshop.gameloft.com",c:`custom_sni=104.19.194.29
-use_realm_host=true
-preserve_sni=false
-use_tcp_payload=false`},
-
-{n:"Orange – www.5g.globe.com.ph",h:"www.5g.globe.com.ph",c:`custom_sni=104.19.194.29
-use_realm_host=true
-preserve_sni=false
-use_tcp_payload=false`},
-
-{n:"Orange – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=104.19.194.29
-use_realm_host=true
-preserve_sni=false
-use_tcp_payload=false`},
+{cat:"ORANGE",n:"Orange – wapshop.gameloft.com",h:"wapshop.gameloft.com",c:`custom_sni=104.19.194.29`},
+{cat:"ORANGE",n:"Orange – www.5g.globe.com.ph",h:"www.5g.globe.com.ph",c:`custom_sni=104.19.194.29`},
+{cat:"ORANGE",n:"Orange – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=104.19.194.29`},
 
 /* VODACOM */
-{n:"Vodacom – 172.66.0.96",h:"172.66.0.96",c:`custom_sni=172.66.0.96
-use_realm_host=true
-preserve_sni=false
-use_tcp_payload=false`},
-
-{n:"Vodacom – connectu.vodacom.cd",h:"connectu.vodacom.cd",c:`custom_sni=connectu.vodacom.cd
-custom_resolver=1.1.1.1
-use_realm_host=true
-preserve_sni=true
-use_tcp_payload=false`},
-
-{n:"Vodacom – Superapp.ethiomobilemoney.et",h:"Superapp.ethiomobilemoney.et",c:`custom_sni=Superapp.ethiomobilemoney.et`},
-
-{n:"Vodacom – educ.vodacom.cd",h:"educ.vodacom.cd",c:`custom_sni=educ.vodacom.cd`},
+{cat:"VODACOM",n:"Vodacom – 172.66.0.96",h:"172.66.0.96",c:`custom_sni=172.66.0.96`},
+{cat:"VODACOM",n:"Vodacom – connectu.vodacom.cd",h:"connectu.vodacom.cd",c:`custom_sni=connectu.vodacom.cd`},
+{cat:"VODACOM",n:"Vodacom – Superapp.ethiomobilemoney.et",h:"Superapp.ethiomobilemoney.et",c:`custom_sni=Superapp.ethiomobilemoney.et`},
+{cat:"VODACOM",n:"Vodacom – educ.vodacom.cd",h:"educ.vodacom.cd",c:`custom_sni=educ.vodacom.cd`},
 
 /* AIRTEL */
-{n:"Airtel – www.pdfdrive.com",h:"www.pdfdrive.com",c:`custom_sni=www.pdfdrive.com`},
-
-{n:"Airtel – www.edx.org",h:"www.edx.org",c:`custom_sni=www.edx.org`},
-
-{n:"Airtel – 162.159.140.253",h:"162.159.140.253",c:`custom_sni=162.159.140.253`},
-
-{n:"Airtel DRC – 172.66.0.251",h:"172.66.0.251",c:`custom_sni=172.66.0.251`},
-
-{n:"Airtel – dashboard.airtelquiz.airtel.cd",h:"dashboard.airtelquiz.airtel.cd",c:`custom_sni=dashboard.airtelquiz.airtel.cd`},
+{cat:"AIRTEL",n:"Airtel – www.pdfdrive.com",h:"www.pdfdrive.com",c:`custom_sni=www.pdfdrive.com`},
+{cat:"AIRTEL",n:"Airtel – www.edx.org",h:"www.edx.org",c:`custom_sni=www.edx.org`},
+{cat:"AIRTEL",n:"Airtel – 162.159.140.253",h:"162.159.140.253",c:`custom_sni=162.159.140.253`},
+{cat:"AIRTEL",n:"Airtel DRC – 172.66.0.251",h:"172.66.0.251",c:`custom_sni=172.66.0.251`},
+{cat:"AIRTEL",n:"Airtel – dashboard.airtelquiz.airtel.cd",h:"dashboard.airtelquiz.airtel.cd",c:`custom_sni=dashboard.airtelquiz.airtel.cd`},
 
 /* AFRICELL */
-{n:"Africell – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=premierbetzone.com
-ports=80,443`},
-
-{n:"Africell – 104.18.12.36",h:"104.18.12.36",c:`custom_sni=104.18.12.36`},
-
-{n:"Africell – safefood.net",h:"safefood.net",c:`custom_sni=safefood.net`},
-
-{n:"Africell – www.aerisroves.com",h:"www.aerisroves.com",c:`custom_sni=www.aerisroves.com`},
+{cat:"AFRICELL",n:"Africell – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=premierbetzone.com`},
+{cat:"AFRICELL",n:"Africell – 104.18.12.36",h:"104.18.12.36",c:`custom_sni=104.18.12.36`},
+{cat:"AFRICELL",n:"Africell – safefood.net",h:"safefood.net",c:`custom_sni=safefood.net`},
+{cat:"AFRICELL",n:"Africell – www.aerisroves.com",h:"www.aerisroves.com",c:`custom_sni=www.aerisroves.com`},
 
 /* MTN */
-{n:"MTN – stg.onlinecms.mtn.co.za",h:"stg.onlinecms.mtn.co.za",c:`custom_sni=stg.onlinecms.mtn.co.za`},
+{cat:"MTN",n:"MTN – stg.onlinecms.mtn.co.za",h:"stg.onlinecms.mtn.co.za",c:`custom_sni=stg.onlinecms.mtn.co.za`},
 
 /* TEST NET */
-{n:"Test Net – www.float.com (V2Ray)",h:"www.float.com",c:`{"add":"www.float.com","port":"443","tls":"tls"}`},
-
-{n:"Test Net – openclassrooms.com",h:"openclassrooms.com",c:`custom_sni=openclassrooms.com`},
-
-{n:"Test Net – mumandbaby.vodacom.cd",h:"mumandbaby.vodacom.cd",c:`custom_sni=mumandbaby.vodacom.cd`},
-
-{n:"Test Net – www.winner.bet",h:"www.winner.bet",c:`custom_sni=www.winner.bet`},
+{cat:"TEST",n:"Test – www.float.com",h:"www.float.com",c:`{"add":"www.float.com","port":"443","tls":"tls"}`},
+{cat:"TEST",n:"Test – openclassrooms.com",h:"openclassrooms.com",c:`custom_sni=openclassrooms.com`},
+{cat:"TEST",n:"Test – mumandbaby.vodacom.cd",h:"mumandbaby.vodacom.cd",c:`custom_sni=mumandbaby.vodacom.cd`},
+{cat:"TEST",n:"Test – www.winner.bet",h:"www.winner.bet",c:`custom_sni=www.winner.bet`},
 
 /* STARK VPN */
-{n:"Stark VPN – 91.220.208.30",h:"91.220.208.30",c:`custom_host=91.220.208.30`},
+{cat:"STARK",n:"Stark VPN – 91.220.208.30",h:"91.220.208.30",c:`custom_host=91.220.208.30`},
 
 /* PAYLOADS */
-{n:"Orange SocksIP & linklayer Payload",h:"orangeetmoi.orange.cd",c:`GET HTTP/1.1[crlf]
-Host: orangeetmoi.orange.cd[crlf]
-X-Online-Host: orangeetmoi.orange.cd[crlf]
-Connection: keep-alive[crlf][crlf]`},
-
-{n:"Orange LinkLayer et socksip Payload",h:"monoprofilorange.cd",c:`HTTP/1.1 200[crlf]
-Host: http://monoprofilorange.cd[crlf][crlf]!`},
-
-{n:"airtel LinkLayer & socksip UPD",h:"1-65535",c:`1-65535`},
-
-{n:"airtel LinkLayer et socksip Payload",h:"1-65535",c:`1-65535`}
+{cat:"PAYLOAD",n:"Orange SocksIP Payload",h:"orangeetmoi.orange.cd",c:`GET HTTP/1.1[crlf]Host: orangeetmoi.orange.cd[crlf][crlf]`},
+{cat:"PAYLOAD",n:"Orange LinkLayer Payload",h:"monoprofilorange.cd",c:`HTTP/1.1 200[crlf][crlf]!`},
+{cat:"PAYLOAD",n:"Airtel Payload",h:"1-65535",c:`1-65535`}
 ];
 
-function unlock(){
- if(document.getElementById("key").value!==KEY){
-  alert("❌ Clé incorrecte");
-  return;
- }
- document.getElementById("content").classList.remove("hidden");
- document.getElementById("gen").classList.remove("hidden");
- load();
+/* ===== ACCOUNT ===== */
+function register(){
+ if(!user.value||!pass.value) return;
+ localStorage.setItem("davUser",user.value);
+ localStorage.setItem("davPass",pass.value);
+ accMsg.textContent="✅ Compte créé";
+}
+function login(){
+ if(user.value===localStorage.getItem("davUser") &&
+    pass.value===localStorage.getItem("davPass")){
+   accMsg.textContent="✅ Connecté";
+   account.classList.add("hidden");
+   keyBox.classList.remove("hidden");
+ } else accMsg.textContent="❌ Identifiants incorrects";
 }
 
+/* ===== KEY TIMER ===== */
+function unlock(){
+ if(key.value===KEY_ALL) FILTER="ALL";
+ else if(key.value===KEY_VA) FILTER="VA";
+ else return alert("❌ Clé incorrecte");
+
+ content.classList.remove("hidden");
+ gen.classList.remove("hidden");
+ load();
+ startTimer(120);
+}
+
+function startTimer(s){
+ clearInterval(timerInt);
+ let t=s;
+ timerInt=setInterval(()=>{
+   timer.textContent="⏳ Accès restant : "+t+"s";
+   if(--t<0) lock();
+ },1000);
+}
+
+function lock(){
+ clearInterval(timerInt);
+ content.classList.add("hidden");
+ gen.classList.add("hidden");
+ timer.textContent="⛔ Accès expiré – Reprendre la clé";
+ key.value="";
+}
+
+/* ===== LOAD ===== */
 function load(){
- const h=document.getElementById("hosts");
- const s=document.getElementById("hostSelect");
- h.innerHTML=""; s.innerHTML="";
+ hosts.innerHTML=""; hostSelect.innerHTML="";
  HOSTS.forEach((x,i)=>{
-  h.innerHTML+=`
-   <div class="host">
-    <b>${x.n}</b><br><i>${x.h}</i>
-    <div class="actions">
-     <button onclick="copy('${x.h}')">Copier Host</button>
-     <button onclick="copy(\`${x.c}\`)">Copier Config</button>
-     <button onclick="toggle(${i})">Détails</button>
-    </div>
-    <div id="d${i}" class="details"><pre>${x.c}</pre></div>
-   </div>`;
-  s.innerHTML+=`<option value="${x.h}">${x.h}</option>`;
+  if(FILTER==="VA" && !["VODACOM","AFRICELL"].includes(x.cat)) return;
+  hosts.innerHTML+=`
+  <div class="host">
+   <b>${x.n}</b><br><i>${x.h}</i>
+   <div class="actions">
+    <button onclick="copy('${x.h}')">Host</button>
+    <button onclick="copy(\`${x.c}\`)">Config</button>
+    <button onclick="toggle(${i})">Détails</button>
+   </div>
+   <div id="d${i}" class="details"><pre>${x.c}</pre></div>
+  </div>`;
+  hostSelect.innerHTML+=`<option>${x.h}</option>`;
  });
 }
 
@@ -226,14 +223,13 @@ function toggle(i){
 }
 
 function generate(){
- const host=document.getElementById("hostSelect").value;
- const mode=document.getElementById("mode").value;
- let out="";
- if(mode==="nsi") out=`custom_sni=${host}\nuse_realm_host=true\npreserve_sni=false\nuse_tcp_payload=false`;
- if(mode==="socks") out=`server=${host}\nport=443`;
- if(mode==="http") out=`host=${host}\nport=80`;
- if(mode==="v2ray") out=`{"add":"${host}","port":"443","tls":"tls"}`;
- document.getElementById("result").value=out;
+ const h=hostSelect.value,m=mode.value;
+ let o="";
+ if(m==="nsi")o=`custom_sni=${h}`;
+ if(m==="socks")o=`server=${h}\nport=443`;
+ if(m==="http")o=`host=${h}\nport=80`;
+ if(m==="v2ray")o=`{"add":"${h}","port":"443","tls":"tls"}`;
+ result.value=o;
 }
 
 function copy(t){navigator.clipboard.writeText(t);}
