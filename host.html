@@ -54,12 +54,13 @@ button{
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 .details{display:none;margin-top:10px;background:#001b33;padding:10px;border-radius:10px}
 footer{text-align:center;margin-top:30px;color:#7fd3ff}
+small{color:#7fd3ff}
 </style>
 </head>
 
 <body>
 <main>
-<h1>🚀 DAVBOT HOST • SNI • PAYLOAD SYSTEM</h1>
+<h1>🚀 DAVBOT HOST • SNI • PAYLOAD SYSTEM (PRO)</h1>
 
 <!-- COMPTE -->
 <div id="account" class="section">
@@ -73,8 +74,13 @@ footer{text-align:center;margin-top:30px;color:#7fd3ff}
 
 <!-- KEY -->
 <div id="keyBox" class="section hidden">
-<h2>🔐 Clé d’accès (2 minutes)</h2>
+<h2>🔐 Clé d’accès</h2>
 <input id="key" placeholder="Entrer la clé">
+<select id="timeSelect">
+  <option value="120">2 minutes</option>
+  <option value="300">5 minutes</option>
+  <option value="600">10 minutes</option>
+</select>
 <button onclick="unlock()">Débloquer</button>
 <p id="timer"></p>
 </div>
@@ -82,22 +88,38 @@ footer{text-align:center;margin-top:30px;color:#7fd3ff}
 <!-- HOST LIST -->
 <div id="content" class="section hidden">
 <h2>📡 Tous les Hosts</h2>
+<input id="search" placeholder="🔍 Rechercher un host..." oninput="load()">
 <div id="hosts"></div>
 </div>
 
 <!-- GENERATOR -->
 <div id="gen" class="section hidden">
 <h2>⚙️ Générateur</h2>
+
+<select id="filterOp" onchange="load()">
+<option value="ALL">🌍 Tous</option>
+<option value="ORANGE">🟠 Orange</option>
+<option value="VODACOM">🔵 Vodacom</option>
+<option value="AIRTEL">🔴 Airtel</option>
+<option value="AFRICELL">🟣 Africell</option>
+<option value="MTN">🟡 MTN</option>
+<option value="V2RAY">🟢 V2Ray</option>
+<option value="PAYLOAD">📦 Payload</option>
+</select>
+
 <select id="hostSelect"></select>
+
 <select id="mode">
 <option value="nsi">HA Tunnel (NSI)</option>
 <option value="socks">SocksIP</option>
 <option value="http">HTTP</option>
 <option value="v2ray">V2Ray</option>
 </select>
+
 <button onclick="generate()">Générer</button>
 <textarea id="result" rows="10" readonly></textarea>
 <button onclick="copy(result.value)">📋 Copier</button>
+<small id="counter"></small>
 </div>
 
 <footer>© 2026 Davbot Network</footer>
@@ -105,52 +127,55 @@ footer{text-align:center;margin-top:30px;color:#7fd3ff}
 
 <script>
 /* ===== KEYS ===== */
-const KEY_ALL="Davbot-pro-key:01846064543";
-const KEY_VA="Davbot-va-key:1112233";
-let FILTER="NONE", timerInt;
+const KEY_ALL="davbot-pro-01";
+const KEY_VA="davbot-va-846064543";
+const KEY_ADMIN="davbot-admin-846064543";
+
+let FILTER="ALL", timerInt;
+let genCount=Number(localStorage.getItem("genCount")||0);
 
 /* ===== HOSTS (TOUS TES HOSTS) ===== */
 const HOSTS=[
+
 /* ORANGE */
-{cat:"ORANGE",n:"Orange – wapshop.gameloft.com",h:"wapshop.gameloft.com",c:`custom_sni=104.19.194.29`},
-{cat:"ORANGE",n:"Orange – www.5g.globe.com.ph",h:"www.5g.globe.com.ph",c:`custom_sni=104.19.194.29`},
-{cat:"ORANGE",n:"Orange – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=104.19.194.29`},
+{cat:"ORANGE",name:"Orange – wapshop.gameloft.com",host:"wapshop.gameloft.com",config:"custom_sni=104.19.194.29"},
+{cat:"ORANGE",name:"Orange – www.5g.globe.com.ph",host:"www.5g.globe.com.ph",config:"custom_sni=104.19.194.29"},
+{cat:"ORANGE",name:"Orange – premierbetzone.com",host:"premierbetzone.com",config:"custom_sni=104.19.194.29"},
+{cat:"ORANGE",name:"Orange – Superapp.ethiomobilemoney.et",host:"Superapp.ethiomobilemoney.et",config:"custom_sni=Superapp.ethiomobilemoney.et"},
+{cat:"ORANGE",name:"Orange – 195.154.252.172",host:"195.154.252.172",config:"custom_sni=195.154.252.172"},
 
 /* VODACOM */
-{cat:"VODACOM",n:"Vodacom – 172.66.0.96",h:"172.66.0.96",c:`custom_sni=172.66.0.96`},
-{cat:"VODACOM",n:"Vodacom – connectu.vodacom.cd",h:"connectu.vodacom.cd",c:`custom_sni=connectu.vodacom.cd`},
-{cat:"VODACOM",n:"Vodacom – Superapp.ethiomobilemoney.et",h:"Superapp.ethiomobilemoney.et",c:`custom_sni=Superapp.ethiomobilemoney.et`},
-{cat:"VODACOM",n:"Vodacom – educ.vodacom.cd",h:"educ.vodacom.cd",c:`custom_sni=educ.vodacom.cd`},
+{cat:"VODACOM",name:"Vodacom – connectu.vodacom.cd",host:"connectu.vodacom.cd",config:"custom_sni=connectu.vodacom.cd"},
+{cat:"VODACOM",name:"Vodacom – educ.vodacom.cd",host:"educ.vodacom.cd",config:"custom_sni=educ.vodacom.cd"},
+{cat:"VODACOM",name:"Vodacom – 172.66.0.96",host:"172.66.0.96",config:"custom_sni=172.66.0.96"},
+{cat:"VODACOM",name:"Vodacom – mumandbaby.vodacom.cd",host:"mumandbaby.vodacom.cd",config:"custom_sni=mumandbaby.vodacom.cd"},
 
 /* AIRTEL */
-{cat:"AIRTEL",n:"Airtel – www.pdfdrive.com",h:"www.pdfdrive.com",c:`custom_sni=www.pdfdrive.com`},
-{cat:"AIRTEL",n:"Airtel – www.edx.org",h:"www.edx.org",c:`custom_sni=www.edx.org`},
-{cat:"AIRTEL",n:"Airtel – 162.159.140.253",h:"162.159.140.253",c:`custom_sni=162.159.140.253`},
-{cat:"AIRTEL",n:"Airtel DRC – 172.66.0.251",h:"172.66.0.251",c:`custom_sni=172.66.0.251`},
-{cat:"AIRTEL",n:"Airtel – dashboard.airtelquiz.airtel.cd",h:"dashboard.airtelquiz.airtel.cd",c:`custom_sni=dashboard.airtelquiz.airtel.cd`},
+{cat:"AIRTEL",name:"Airtel – www.pdfdrive.com",host:"www.pdfdrive.com",config:"custom_sni=www.pdfdrive.com"},
+{cat:"AIRTEL",name:"Airtel – www.edx.org",host:"www.edx.org",config:"custom_sni=www.edx.org"},
+{cat:"AIRTEL",name:"Airtel – dashboard.airtelquiz.airtel.cd",host:"dashboard.airtelquiz.airtel.cd",config:"custom_sni=dashboard.airtelquiz.airtel.cd"},
+{cat:"AIRTEL",name:"Airtel – 162.159.140.253",host:"162.159.140.253",config:"custom_sni=162.159.140.253"},
 
 /* AFRICELL */
-{cat:"AFRICELL",n:"Africell – premierbetzone.com",h:"premierbetzone.com",c:`custom_sni=premierbetzone.com`},
-{cat:"AFRICELL",n:"Africell – 104.18.12.36",h:"104.18.12.36",c:`custom_sni=104.18.12.36`},
-{cat:"AFRICELL",n:"Africell – safefood.net",h:"safefood.net",c:`custom_sni=safefood.net`},
-{cat:"AFRICELL",n:"Africell – www.aerisroves.com",h:"www.aerisroves.com",c:`custom_sni=www.aerisroves.com`},
+{cat:"AFRICELL",name:"Africell – premierbetzone.com",host:"premierbetzone.com",config:"custom_sni=premierbetzone.com"},
+{cat:"AFRICELL",name:"Africell – 104.18.12.36",host:"104.18.12.36",config:"custom_sni=104.18.12.36"},
+{cat:"AFRICELL",name:"Africell – safefood.net",host:"safefood.net",config:"custom_sni=safefood.net"},
+{cat:"AFRICELL",name:"Africell – www.aerisroves.com",host:"www.aerisroves.com",config:"custom_sni=www.aerisroves.com"},
 
 /* MTN */
-{cat:"MTN",n:"MTN – stg.onlinecms.mtn.co.za",h:"stg.onlinecms.mtn.co.za",c:`custom_sni=stg.onlinecms.mtn.co.za`},
-
-/* TEST NET */
-{cat:"TEST",n:"Test – www.float.com",h:"www.float.com",c:`{"add":"www.float.com","port":"443","tls":"tls"}`},
-{cat:"TEST",n:"Test – openclassrooms.com",h:"openclassrooms.com",c:`custom_sni=openclassrooms.com`},
-{cat:"TEST",n:"Test – mumandbaby.vodacom.cd",h:"mumandbaby.vodacom.cd",c:`custom_sni=mumandbaby.vodacom.cd`},
-{cat:"TEST",n:"Test – www.winner.bet",h:"www.winner.bet",c:`custom_sni=www.winner.bet`},
+{cat:"MTN",name:"MTN – stg.onlinecms.mtn.co.za",host:"stg.onlinecms.mtn.co.za",config:"custom_sni=stg.onlinecms.mtn.co.za"},
 
 /* STARK VPN */
-{cat:"STARK",n:"Stark VPN – 91.220.208.30",h:"91.220.208.30",c:`custom_host=91.220.208.30`},
+{cat:"ORANGE",name:"Stark VPN – 91.220.208.30",host:"91.220.208.30",config:"custom_host=91.220.208.30"},
+
+/* V2RAY */
+{cat:"V2RAY",name:"V2Ray – www.float.com",host:"www.float.com",config:'{"add":"www.float.com","port":"443","tls":"tls"}'},
 
 /* PAYLOADS */
-{cat:"PAYLOAD",n:"Orange SocksIP Payload",h:"orangeetmoi.orange.cd",c:`GET HTTP/1.1[crlf]Host: orangeetmoi.orange.cd[crlf][crlf]`},
-{cat:"PAYLOAD",n:"Orange LinkLayer Payload",h:"monoprofilorange.cd",c:`HTTP/1.1 200[crlf][crlf]!`},
-{cat:"PAYLOAD",n:"Airtel Payload",h:"1-65535",c:`1-65535`}
+{cat:"PAYLOAD",name:"Orange SocksIP Payload",host:"orangeetmoi.orange.cd",config:"GET HTTP/1.1\nHost: orangeetmoi.orange.cd\n\n"},
+{cat:"PAYLOAD",name:"Orange LinkLayer Payload",host:"monoprofilorange.cd",config:"HTTP/1.1 200\n\n!"},
+{cat:"PAYLOAD",name:"Airtel Payload",host:"1-65535",config:"1-65535"}
+
 ];
 
 /* ===== ACCOUNT ===== */
@@ -169,70 +194,100 @@ function login(){
  } else accMsg.textContent="❌ Identifiants incorrects";
 }
 
-/* ===== KEY TIMER ===== */
+/* ===== KEY ===== */
 function unlock(){
- if(key.value===KEY_ALL) FILTER="ALL";
- else if(key.value===KEY_VA) FILTER="VA";
+ clearInterval(timerInt);
+ if(key.value===KEY_ADMIN){
+   FILTER="ALL";
+   timer.textContent="👑 Accès ADMIN illimité";
+ }
+ else if(key.value===KEY_ALL){
+   FILTER="ALL";
+   startTimer(+timeSelect.value);
+ }
+ else if(key.value===KEY_VA){
+   FILTER="VA";
+   startTimer(+timeSelect.value);
+ }
  else return alert("❌ Clé incorrecte");
 
+ localStorage.setItem("davSession","on");
  content.classList.remove("hidden");
  gen.classList.remove("hidden");
  load();
- startTimer(120);
 }
 
+/* ===== TIMER ===== */
 function startTimer(s){
- clearInterval(timerInt);
  let t=s;
  timerInt=setInterval(()=>{
    timer.textContent="⏳ Accès restant : "+t+"s";
    if(--t<0) lock();
  },1000);
 }
-
 function lock(){
  clearInterval(timerInt);
  content.classList.add("hidden");
  gen.classList.add("hidden");
- timer.textContent="⛔ Accès expiré – Reprendre la clé";
- key.value="";
+ timer.textContent="⛔ Accès expiré";
 }
 
 /* ===== LOAD ===== */
 function load(){
- hosts.innerHTML=""; hostSelect.innerHTML="";
+ hosts.innerHTML="";
+ hostSelect.innerHTML="";
+ const q=search.value.toLowerCase();
+ const op=filterOp.value;
+
  HOSTS.forEach((x,i)=>{
   if(FILTER==="VA" && !["VODACOM","AFRICELL"].includes(x.cat)) return;
+  if(op!=="ALL" && x.cat!==op) return;
+  if(q && !x.host.toLowerCase().includes(q) && !x.name.toLowerCase().includes(q)) return;
+
   hosts.innerHTML+=`
   <div class="host">
-   <b>${x.n}</b><br><i>${x.h}</i>
+   <b>${x.name}</b><br><i>${x.host}</i>
    <div class="actions">
-    <button onclick="copy('${x.h}')">Host</button>
-    <button onclick="copy(\`${x.c}\`)">Config</button>
+    <button onclick="copy('${x.host}')">Host</button>
+    <button onclick="copy(\`${x.config}\`)">Config</button>
     <button onclick="toggle(${i})">Détails</button>
    </div>
-   <div id="d${i}" class="details"><pre>${x.c}</pre></div>
+   <div id="d${i}" class="details"><pre>${x.config}</pre></div>
   </div>`;
-  hostSelect.innerHTML+=`<option>${x.h}</option>`;
+  hostSelect.innerHTML+=`<option value="${x.host}">${x.host}</option>`;
  });
 }
 
+/* ===== GENERATE ===== */
+function generate(){
+ const h=hostSelect.value,m=mode.value;
+ let o="";
+ const isIP=/^\d{1,3}(\.\d{1,3}){3}$/.test(h);
+
+ if(m==="nsi")o=`custom_sni=${h}${isIP?"\n# IP détectée":""}`;
+ if(m==="socks")o=`server=${h}\nport=443`;
+ if(m==="http")o=`host=${h}\nport=80`;
+ if(m==="v2ray")o=`{"add":"${h}","port":"443","tls":"tls"}`;
+
+ genCount++;
+ localStorage.setItem("genCount",genCount);
+ counter.textContent="📊 Générations : "+genCount;
+ result.value=o;
+}
+
+/* ===== UTILS ===== */
 function toggle(i){
  const d=document.getElementById("d"+i);
  d.style.display=d.style.display==="block"?"none":"block";
 }
-
-function generate(){
- const h=hostSelect.value,m=mode.value;
- let o="";
- if(m==="nsi")o=`custom_sni=${h}`;
- if(m==="socks")o=`server=${h}\nport=443`;
- if(m==="http")o=`host=${h}\nport=80`;
- if(m==="v2ray")o=`{"add":"${h}","port":"443","tls":"tls"}`;
- result.value=o;
-}
-
 function copy(t){navigator.clipboard.writeText(t);}
+
+/* ===== AUTO SESSION ===== */
+if(localStorage.getItem("davSession")==="on"){
+ account.classList.add("hidden");
+ keyBox.classList.remove("hidden");
+}
+counter.textContent="📊 Générations : "+genCount;
 </script>
 </body>
 </html>
