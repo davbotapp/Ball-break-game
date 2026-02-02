@@ -353,14 +353,14 @@ function sendWhatsApp(){
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
   const message = document.getElementById("message").value;
-  let url = `https://wa.me/243000000000?text=Nom:%20${encodeURIComponent(name)}%0ATéléphone:%20${encodeURIComponent(phone)}%0AMessage:%20${encodeURIComponent(message)}`;
+  let url = `https://wa.me/243800182016?text=Nom:%20${encodeURIComponent(name)}%0ATéléphone:%20${encodeURIComponent(phone)}%0AMessage:%20${encodeURIComponent(message)}`;
   window.open(url, "_blank");
 }
 
 // Commander service via WhatsApp
 function orderService(btn){
   const service = btn.closest('.card').querySelector("h3").textContent;
-  let url = `https://wa.me/243000000000?text=Je souhaite commander le service: ${encodeURIComponent(service)}`;
+  let url = `https://wa.me/243800182016?text=Je souhaite commander le service: ${encodeURIComponent(service)}`;
   window.open(url,"_blank");
 }
 
