@@ -342,7 +342,7 @@ document.getElementById('iPaidBtn').onclick = () => {
   const paymentReadable = payMethod === 'orange' ? `Orange Money (${ORANGE_NUMBER})` : `Airtel Money (${AIRTEL_NUMBER})`;
 
   const msg = `Bonjour, je suis ${cname}.
-J'ai payé la commande Davbot Service.
+J'ai veux payé la commande Davbot Service.
 
 Détails :
 - Nom client : ${cname}
@@ -353,7 +353,7 @@ Détails :
 - Méthode : ${paymentReadable}
 - Référence / Numéro : ${pref}
 
-Merci de valider et d'envoyer le fichier.`.trim();
+Merci de valider et j'envoie l'argent.`.trim();
 
   window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`);
 };
